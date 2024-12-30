@@ -1,0 +1,45 @@
+id: org.freedesktop.Sdk.Extension.rustup-minimal
+branch: '24.08'
+runtime: org.freedesktop.Sdk
+build-extension: true
+sdk: org.freedesktop.Sdk
+runtime-version: '24.08'
+separate-locales: false
+appstream-compose: false
+
+build-options:
+  append-path: /usr/lib/sdk/rustup-minimal/bin
+  env:
+    CARGO_HOME: /usr/lib/sdk/rustup-minimal
+    RUSTUP_HOME: /usr/lib/sdk/rustup-minimal
+    RUSTUP_DIST_SERVER: file:///run/build/rustup/static.rust-lang.org
+
+modules:
+  - name: rustup
+    buildsystem: simple
+    build-commands:
+      - chmod +x rustup-init && ./rustup-init -y --profile minimal --no-modify-path
+      - rustup toolchain install nightly --profile minimal --no-self-update
+    sources:
+      - type: file
+        url: https://static.rust-lang.org/rustup/dist/x86_64-unknown-linux-gnu/rustup-init
+        sha256: 6aeece6993e902708983b209d04c0d1dbb14ebb405ddb87def578d41f920f56d
+        dest-filename: rustup-init
+      - type: file
+        url: https://static.rust-lang.org/dist/channel-rust-stable.toml
+        sha256: b3544fb72bc3189697fc18ac2d3fa27d57ee8434f59d9919d4d70af2c6f010b3
+        dest: static.rust-lang.org/dist
+      - type: file
+        url: https://static.rust-lang.org/dist/channel-rust-stable.toml.sha256
+        sha256: 627276a6bdb40a93310984ed6d807ec921e37df387266ad2a92ab73b1f563514
+        dest: static.rust-lang.org/dist
+      - type: file
+        url: https://static.rust-lang.org/dist/channel-rust-nightly.toml
+        sha256: 774ac03ef1df398095696fc182a80858fd4455e9c7283badbe99ceb2563bd654
+        dest: static.rust-lang.org/dist
+      - type: file
+        url: https://static.rust-lang.org/dist/channel-rust-nightly.toml.sha256
+        sha256: fa3da6323c440731563f02ef2c445bd6be27d96241cb49ccc1a53f5dff5cff6a
+        dest: static.rust-lang.org/dist
+      - rustup-stable-minimal.json
+      - rustup-nightly-minimal.json
